@@ -1,28 +1,47 @@
 import React from 'react'
+
+// hook que permite disparar la accion hacia mi reducer
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom';
+import { login } from '../../actions/auth';
+import { useForm } from '../../hooks/useForm';
 
 export const LoginScreen = () => {
+    const dispatch = useDispatch();
+    const [ values, handleInputChangue ] = useForm({
+        email: 'danielhuenul90@gmail.com',
+        password: '12345678'
+    });
+    const { email, password } = values;
+    const handleLogin = (e) => {
+        e.preventDefault();
+        console.log(email, password);
+        dispatch( login(123456, 'Daniel') );
+    }
     return (
         <>
             <h3 className="auth__title">Login</h3>
-            <form>
+            <form onSubmit={ handleLogin }>
                 <input 
                     className="auth__input" 
                     type="text" 
                     placeholder="email" 
                     name="email"
+                    value={ email }
+                    onChange={ handleInputChangue }
                     autoComplete="off" 
                 />
                 <input 
                     className="auth__input" 
                     type="password" 
                     placeholder="****" 
-                    name="password" 
+                    name="password"
+                    value={ password } 
+                    onChange={ handleInputChangue }
                     autoComplete="off"
                 />
                 <button 
                     type="submit" 
-                    onClick={(e) => { e.preventDefault(); }}
                     className="btn btn-primary btn-block"
                 >
                     Ingresar
