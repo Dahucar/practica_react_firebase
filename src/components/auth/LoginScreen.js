@@ -1,16 +1,17 @@
 import React from 'react';
 
 // hook que permite disparar la accion hacia mi reducer
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { startGoogleLogin, startLoginEmailPassword } from '../../actions/auth';
 import { useForm } from '../../hooks/useForm';
 
 export const LoginScreen = () => {
     const dispatch = useDispatch();
+    const { loading } = useSelector( state => state.ui )
     const [ values, handleInputChangue ] = useForm({
-        email: 'danielhuenul90@gmail.com',
-        password: '12345678'
+        email: 'danielhuenul80@gmail.com',
+        password: '123456789'
     });
     const { email, password } = values;
     const handleLogin = (e) => {
@@ -48,9 +49,11 @@ export const LoginScreen = () => {
                 <button 
                     type="submit" 
                     className="btn btn-primary btn-block"
+                    disabled={ loading }
                 >
                     Ingresar
                 </button>
+        
                 <div className="auth__social-networks">
                     <p>Inciar con redes sociales.</p>
                     <div className="google-btn" onClick={ handleGoogleLogin }>

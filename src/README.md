@@ -148,4 +148,21 @@
     }
     ```
 
+## Paso 6. Obtener los datos de mi state y usarlos.
+- para hacer esto, primero que nada debemos definir donde realizar la obtención de los datos ya guardados. En este caso será en el RegisterScreen donde mediante el fomrulario de registro mostraremos los diferentes mensaje de error obtenidos productos de la validacion, los cuales ya fueron añadidos o eviados a mi store mediante el dispatch de la accion correspondiente, para ello se creo un reducer para manejar o controlar esas acciones y fue añadido a mi configuracion en mi store mediante el "combienersReducers".
+- una vez en el componente seleccionado, importaremos un hook que permite relizar esta funcionalidad de manera muy sensilla. El hook es el siguiente. 
+    ```
+    import { useDispatch, useSelector } from 'react-redux';   
+    ```
+    el cual es obtendio desde react redux ingualmente que el useDispatch, ambos hooks provenientes del react redux.
+
+- una vez hecho lo anterior poremos usar el hook de la siguiente forma.
+    ```
+    const { msgError } = useSelector( state => state.ui );
+    ```
+    donde el hook useSelector tendra a su disposicion el estado actual de mi store, en este caso nombrado como state (puede ser cualqueier nombre).
+    de esta forma mediante esta varible podre acceder a TODA la infirmacion guardada en mi store, esto incluye el conjunto de reducer que yo tenga configurado. 
+
+    en este caso se obtiene la propiedad "ui", ya que fue ese el idefntificador dado en la configuracion en el combineReducers" por ello medante desestructuración obtendre el msgError donde mediante disparos de acciones sincronas se fueron almacenando los diferentes mensajes de erro, que ahora tengo a disposición.
+
 
