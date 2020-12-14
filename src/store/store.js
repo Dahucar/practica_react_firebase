@@ -3,8 +3,15 @@
 // en este caso (JournalApp), ya que tiene todo el sistema de rutas y por ende los componentes.
 
 // Será la fuente de obtención de todos los datosde la app
-import { combineReducers, createStore } from 'redux';
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+
+// me permitira manejar o controlar el "disparo" de acciones asincronas hacia mi store
+import thunk from 'redux-thunk';
 import { authReducer } from '../reducers/authReducer';
+
+// Habilita que tengamos las extenciones para DevTools
+// Instrucción necesaria para ver panel de redux en navegador chrome / opera
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 // para manejar varios reducers usaremos combineReducers
 const reducers = combineReducers({
@@ -15,6 +22,7 @@ const reducers = combineReducers({
 // con la instruccion anterior se podrán menejar tantos como sean necesarios.
 export const store = createStore(
     reducers,
-    // Instrucción necesaria para ver panel de redux en navegador chrome / opera
-    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    composeEnhancers(
+        applyMiddleware( thunk )
+    )
 );

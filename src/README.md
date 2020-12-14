@@ -59,7 +59,7 @@
     ```
 
 ## Paso 3. crear un Provider para compartir mi store a mis componentes.
-- Para ello dentro de alguno de los componentes padres de la app debere añadir la importacion del provider desde redux.
+- Para ello dentro de alguno de los componentes padres de la app debere añadir la importacion del provider desde react-redux.
     ```
     import { Provider } from 'react-redux'
 
@@ -73,9 +73,9 @@
     donde por parametros o props en React le pasare mi store.
     Añadir que la creacion de provider debe ser en la posicion mas alta dentro de la gerarquia de componentes (claro, en caso de ser esa la necesisdad de alcanze de la informacion, por que puede ser donde yo estime conveniente) pero en este caso mi store sera compartido con AppRouter que contien mi sistema rutas en la app, de esa forma todas las rutas podra acceder a los datos que poseea el store mediante el "disparo" de acciones.
 
-## Paso 4. Crear y "Disparar" aciones hacia mi Store
+## Paso 4. Crear y "Disparar" aciones sincronas hacia mi Store
 
-- Primero que nada, mediante una accion voy a enviar los datos que reciva por parametros hacia mi store, esto será mediante el retorno de los datos enviados en esta funcion pero aplicando el formato que necesita resivir en mi reducer. que sera la accion definida en el. recordando que la accion tiene un tipo, y el contenido "payload"
+- Primero que nada, mediante una accion voy a enviar los datos que reciva por parametros hacia mi store, esto será mediante el retorno de los datos enviados en esta funcion pero aplicando el formato que necesita resivir en mi reducer. que sera la accion definida en el. recordando que la accion tiene un tipo, y el contenido "payload", Comentar que esto es en archivo independiente de forma que yo debere importar este "login" para usarlo en otros componentes.
     ```
     import { types } from "../types/types"
 
@@ -87,7 +87,7 @@
         }        
     })
     ```
-    Por ello los componentes podran dispara acciones, y en este caso será por medio del hook useDispatch, el cual se debera importar
+    Por ello los componentes podran dispara acciones, y en este caso será por medio del hook useDispatch, el cual se debera importar (Destacar: esto se hace dentro algun componente, en este caso el LoginScreen)
     ```
     import { useDispatch } from 'react-redux'
     ```
@@ -95,7 +95,7 @@
     ```
     const dispatch = useDispatch();
     ```
-    de esta forma se realizará la prueba desde el LoginScreen por medio del evento submit del formulario, donde esta en uso el hook "dispatch", el cual esta reciviendo como parametro la accion creada anteriomente.
+    de esta forma se realizará la prueba desde el LoginScreen por medio del evento submit del formulario, donde esta en uso el hook "dispatch", el cual esta reciviendo como parametro la accion creada anteriomente. Que recordando es "login" quien recive los datos y le aplica el formato necesario, que en este caso es ub objeto con una propiedad type (String: ej. AUTH login ) y el payload: (que lleva los datos a procesar). Además de dispatch que es el finalmente quien lo envia a mi store.
     ```
     const handleLogin = (e) => {
         e.preventDefault();
@@ -103,6 +103,49 @@
          dispatch( login(123456, 'Daniel') );
     }
     ```
+    de esta manera los datos enviados seŕan accesibles desde cualquier componentes dentro de la gerarquia.
 
+## Paso 5. Crear "dispatch" de acciones asincronas hacia mi Store con "Redux Thunk"
+
+> [Redux Thunk](https://www.npmjs.com/package/redux-thunk).
+- Configuración previa: una vez instalado se deberá volver a archivo que contiene el store para realizar algunas modificones, primero que nada se debe realizar la importacion de redux thunk, de la siguiente forma.
+    ```
+    import thunk from 'redux-thunk';
+    ```
+    esta nos permite realizar el "disparo" de las acciones asincronas.
+
+- luego debere modifcar la configuracion de las devtools para ello usando la siguiente instruccion. que permite trabajar con las acciones asincronas. (Copiar y pegar lo siguiente)
+    ```
+    const composeEnhancers = (typeof window !== 'undefined' && window.  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+    ```
+- igualmente, en la creacion de mi store debere modifcar de la siguiente forma.
+    ```
+    export const store = createStore(
+        reducers,
+        composeEnhancers(
+            applyMiddleware( thunk )
+        )
+    );
+    ```
+    donde continuare usando el "createStore" y pasandole mi conjunto de reducers, pero se añade la constante creada a "applyMiddleware( thunk )" para habilitar Redux Thunk
+    ```
+    composeEnhancers(
+        applyMiddleware( thunk )
+    )
+    ```
+    DESTACAR: debido a las modificaciones anteriores se debera importar cada una de las funciones añadias.
+    ```
+    import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+    ```
+- Luego, en archivo destinado a las acciones, en este caso actions/auth.js creare una funcion donde esta tendra como retorno un callback, el cual posee un setTimeout que simula el comportamiento de una peticion ajax por ejemplo. Donde se usa la funcion "dispatch" que llega por parametro pero no sera establecida por mi, si no que será redux-thunk quíen la proporciona. Mencionar que se podrían hacer varios dispatch
+    ```
+    export const startLoginEmailPassword = (email, password) => {
+        return ( dispatch ) => {
+            setTimeout(() => {
+                dispatch( login(987, email) );
+            }, 2500);    
+        }
+    }
+    ```
 
 
