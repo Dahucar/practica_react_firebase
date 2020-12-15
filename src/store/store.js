@@ -8,6 +8,7 @@ import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 // me permitira manejar o controlar el "disparo" de acciones asincronas hacia mi store
 import thunk from 'redux-thunk';
 import { authReducer } from '../reducers/authReducer';
+import { notesReducer } from '../reducers/noteReducer';
 import { uiReducer } from '../reducers/uiReducer';
 
 // Habilita que tengamos las extenciones para DevTools
@@ -17,7 +18,8 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 // para manejar varios reducers usaremos combineReducers
 const reducers = combineReducers({
     auth: authReducer,
-    ui: uiReducer
+    ui: uiReducer,
+    notes: notesReducer
 });
 
 // por defecto solo puedo enviar un solo reducer. en este caso mi authReducer

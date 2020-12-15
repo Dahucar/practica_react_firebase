@@ -6,8 +6,8 @@ export const useForm = ( initialState = {} ) => {
     const [values, setValues] = useState(initialState);
 
     //establece el valor por defeto que se envia desde las props
-    const resetInputsValues = () => {
-        setValues( initialState );
+    const resetInputsValues = ( newFormState = initialState ) => {
+        setValues( newFormState );
     }
 
     // function que resive el campo como tal ej, <input>

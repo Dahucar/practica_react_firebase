@@ -12,20 +12,21 @@ import { useDispatch } from 'react-redux';
 import { login } from '../actions/auth'
 import { PublicRoute } from './PublicRoute';
 import { PrivateRoute } from './PrivateRoute';
+import { startLoadingNotes } from '../actions/notes';
 
 export const AppRouter = () => {
     const dispatch = useDispatch();
     const [checking, setChecking] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    console.log(isAuthenticated);
     // Firebase podra determinar cuando un usuario se encuentra logeado, por medio de 
     useEffect(() => {
         // devuelve un observable que estara pendiente a los cambios de la varible user.
-        firebase.auth().onAuthStateChanged(( user ) => {
+        firebase.auth().onAuthStateChanged( async ( user ) => {
             // user puede ser null o un object
             if (user?.uid) {
                 dispatch( login( user.uid, user.displayName ) );
                 setIsAuthenticated( true );
+                dispatch( startLoadingNotes( user.uid ) );
             }else{
                 setIsAuthenticated( false );
             }
@@ -36,7 +37,7 @@ export const AppRouter = () => {
     //aun no se obtiene el usuario logeado.
     if ( checking ) {
         return (
-            <h2>Cargando...</h2>
+            <h2>Wait...</h2>
         )
     }
 

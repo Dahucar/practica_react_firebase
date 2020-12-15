@@ -1,4 +1,4 @@
-# Crear un inicar sesion con Google y Firebase.
+# Crear Autenticación usando Redux y Firebase.
 
 ## Paso 1. Tener acceso a consola de firebase y crear un proyecto.
 - una vez alli se debe accder a la "Descripción general del proyecto" e iniciar un proyecto web. Esto nos dara acceso a las keys para iniciar la configuracion. la cual quedaría de la siguiente forma.
@@ -88,9 +88,16 @@
 
     Finalmente se hará el dispatch con las propiedades ya mencionadas donde es login el encargado de aplicar el formato de los datos con el type: String y el payload: Object. para que dispatch lo envia a mi store.
 
-- Claro por ultimo esto debe de importar en el componente desea, donde ya debe estar en uso el hook "useDispatch", para que simplemente tengamos que llamar a la confion construida en el paso asnteior.
+- Claro por ultimo esto debe de importar en el componente desea, donde ya debe estar en uso el hook "useDispatch", para que simplemente tengamos que llamar a la funcion construida en el paso anterior.
+
+    La importacion del hook viene de react-redux y esta permite realizar el disparo de las acciones.
+
 
     ```
+    import { useDispatch, useSelector } from 'react-redux';
+
+    const dispatch = useDispatch();
+    
     dispatch( startRegister( email, password, name ) );
     ```
 
